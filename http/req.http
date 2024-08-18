@@ -1,0 +1,26 @@
+GET http://localhost:3000/dogs
+
+###
+
+GET http://localhost:3000/dogs/12
+
+###
+
+POST http://localhost:3000/dogs
+Content-Type: application/json
+
+{
+    "name": "diogo"
+}
+
+###
+
+PATCH http://localhost:3000/dogs/1
+
+###
+
+DELETE http://localhost:3000/dogs/13
+
+###
+
+GET http://localhost:3000/dogs/redirect?lang=123
