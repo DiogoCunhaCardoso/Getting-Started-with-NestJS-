@@ -13,9 +13,13 @@ import {
   Redirect, */
 } from '@nestjs/common';
 import { CreateDogDto } from './dto/create-dog.dto';
+import { DogsService } from './dog.service';
+import { Dog } from './interface/dog.interface';
+import { UpdateDogDto } from './dto/update-dog.dto';
 
 @Controller('dogs')
 export class DogsController {
+  constructor(private dogsService: DogsService) {}
   //
   /* @Redirect()
   @Get('redirect')
@@ -26,27 +30,29 @@ export class DogsController {
   } */
 
   @Get()
-  findAll(): string {
-    return 'this route returns all dogs';
+  findAll(): Dog[] {
+    return this.dogsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    return `this route returns a dog with an id of ${id}`;
+  findOne(@Param('id') id: string): Dog {
+    return this.dogsService.findOne(+id);
   }
 
   @Post()
-  create(@Body() body: CreateDogDto): CreateDogDto {
-    return body;
+  create(@Body() body: CreateDogDto): Dog {
+    return this.dogsService.create(body);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string): string {
-    return `this route updates a dog with an id of ${id}`;
+  update(@Param('id') id: string, @Body() body: UpdateDogDto): Dog {
+    return this.dogsService.update(+id, body);
   }
 
   @Delete(':id')
   @Header('Cache-Control', 'none')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(/* @Param('id') id: string */): void {}
+  remove(@Param('id') id: string): void {
+    return this.dogsService.delete(+id);
+  }
 }

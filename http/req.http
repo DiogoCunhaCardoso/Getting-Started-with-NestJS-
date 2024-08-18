@@ -2,7 +2,7 @@ GET http://localhost:3000/dogs
 
 ###
 
-GET http://localhost:3000/dogs/12
+GET http://localhost:3000/dogs/2
 
 ###
 
@@ -10,17 +10,26 @@ POST http://localhost:3000/dogs
 Content-Type: application/json
 
 {
-    "name": "diogo"
+
+  "name": "Tofu",
+  "age": 1,
+  "breed": "Labrador",
+  "isGoodBoy": true
 }
 
 ###
 
 PATCH http://localhost:3000/dogs/1
+Content-Type: application/json
+
+{
+    "age": 4
+}
 
 ###
 
-DELETE http://localhost:3000/dogs/13
+DELETE http://localhost:3000/dogs/1
 
 ###
 
-GET http://localhost:3000/dogs/redirect?lang=123
+# GET http://localhost:3000/dogs/redirect?lang=123
