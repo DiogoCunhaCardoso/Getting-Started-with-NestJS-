@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateDogDto } from './dto/create-dog.dto';
 import { Dog } from './interface/dog.interface';
 import { UpdateDogDto } from './dto/update-dog.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class DogsService {
+  constructor(private authService: AuthService) {}
   private readonly dogsDB: Dog[] = [
     {
       id: 1,
@@ -16,6 +18,7 @@ export class DogsService {
     { id: 2, name: 'Max', age: 5, breed: 'German Shepherd', isGoodBoy: false },
   ];
   findAll(): Dog[] {
+    this.authService.authenticate();
     return this.dogsDB;
   }
 
