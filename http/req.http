@@ -6,7 +6,7 @@ GET http://localhost:3000/dogs
 
 ###
 
-GET http://localhost:3000/dogs/2
+GET http://localhost:3000/dogs/3
 
 ###
 
@@ -16,7 +16,7 @@ Authorization: user
 
 {
 
-  "name": "Tofu",
+  "name": "Buddy",
   "age": 1,
   "breed": "Labrador",
   "isGoodBoy": true
@@ -24,7 +24,7 @@ Authorization: user
 
 ###
 
-PATCH http://localhost:3000/dogs/1
+PATCH http://localhost:3000/dogs/4
 Content-Type: application/json
 
 {

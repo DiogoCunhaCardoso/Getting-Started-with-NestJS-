@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateDogDto } from './dto/create-dog.dto';
 import { Dog } from './interface/dog.interface';
 import { UpdateDogDto } from './dto/update-dog.dto';
 import { AuthService } from 'src/auth/auth.service';
+/* import { DogNotFoundException } from 'src/exceptions/dog-not-found.exception'; */
 
 @Injectable()
 export class DogsService {
@@ -24,10 +29,13 @@ export class DogsService {
 
   findOne(id: number): Dog {
     const dog = this.dogsDB.find((dog) => dog.id === id);
+    if (!dog) throw new NotFoundException(id);
     return dog;
   }
 
   create(body: CreateDogDto): Dog {
+    const exists = this.dogsDB.some((dog) => dog.name === body.name);
+    if (exists) throw new ConflictException("Can't have same name");
     const newId = this.dogsDB.length + 1;
     const newDog = { id: newId, ...body };
     this.dogsDB.push(newDog);
@@ -36,6 +44,7 @@ export class DogsService {
 
   update(id: number, body: UpdateDogDto): Dog {
     const dogIndex = this.dogsDB.findIndex((dog) => dog.id === id);
+    if (dogIndex === -1) throw new NotFoundException(id);
     const updatedDog = { ...this.dogsDB[dogIndex], ...body };
     this.dogsDB[dogIndex] = updatedDog;
 
@@ -44,7 +53,7 @@ export class DogsService {
 
   delete(id: number): void {
     const dogIndex = this.dogsDB.findIndex((dog) => dog.id === id);
-
+    if (dogIndex === -1) throw new NotFoundException(id);
     this.dogsDB.splice(dogIndex, 1);
   }
 }
