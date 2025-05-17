@@ -40,6 +40,9 @@ export class CustomFilter implements ExceptionFilter {
       case HttpStatus.CONFLICT:
         return 'CONFLICT';
         break;
+      case HttpStatus.NOT_ACCEPTABLE:
+        return 'WRONG_FORMAT';
+        break;
 
       default:
         return 'GENERAL_ERROR';

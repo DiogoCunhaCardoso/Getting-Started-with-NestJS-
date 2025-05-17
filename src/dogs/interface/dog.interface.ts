@@ -4,4 +4,5 @@ export interface Dog {
   age: number;
   breed: string;
   isGoodBoy: boolean;
+  birthdate?: string;
 }

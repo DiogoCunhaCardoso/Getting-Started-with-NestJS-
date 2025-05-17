@@ -1,14 +1,19 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Header,
   HttpCode,
   HttpStatus,
   Param,
+  ParseFloatPipe,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
+  UsePipes,
 
   /*  Query,
   Redirect, */
@@ -17,6 +22,7 @@ import { CreateDogDto } from './dto/create-dog.dto';
 import { DogsService } from './dog.service';
 import { Dog } from './interface/dog.interface';
 import { UpdateDogDto } from './dto/update-dog.dto';
+import { ParseDatePipe } from 'src/pipes/parse-date.pipe';
 
 @Controller('dogs')
 export class DogsController {
@@ -30,14 +36,22 @@ export class DogsController {
     return { url: targetUrl, statusCode: 301 };
   } */
 
+  @UsePipes(new DefaultValuePipe(5))
   @Get()
-  findAll(): Dog[] {
-    return this.dogsService.findAll();
+  findAll(@Query('limit') limit: number): Dog[] {
+    return this.dogsService.findAll(limit);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Dog {
-    return this.dogsService.findOne(+id);
+  findOne(
+    @Param(
+      'id',
+      new ParseFloatPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+    @Query('bday', ParseDatePipe) bday: Date,
+  ): Dog {
+    return this.dogsService.findOne(id, bday);
   }
 
   @Post()
@@ -46,14 +60,17 @@ export class DogsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateDogDto): Dog {
-    return this.dogsService.update(+id, body);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateDogDto,
+  ): Dog {
+    return this.dogsService.update(id, body);
   }
 
   @Delete(':id')
   @Header('Cache-Control', 'none')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string): void {
-    return this.dogsService.delete(+id);
+  remove(@Param('id', ParseIntPipe) id: number): void {
+    return this.dogsService.delete(id);
   }
 }
