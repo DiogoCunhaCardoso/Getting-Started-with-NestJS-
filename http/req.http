@@ -33,7 +33,8 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:3000/dogs/1
+DELETE http://localhost:3000/dogs/2
+Authorization: user
 
 ###
 

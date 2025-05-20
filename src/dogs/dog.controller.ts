@@ -13,6 +13,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
 
   /*  Query,
@@ -23,6 +24,8 @@ import { DogsService } from './dog.service';
 import { Dog } from './interface/dog.interface';
 import { UpdateDogDto } from './dto/update-dog.dto';
 import { ParseDatePipe } from 'src/pipes/parse-date.pipe';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { USER_ROLE } from 'src/contants/UserRoles.enum';
 
 @Controller('dogs')
 export class DogsController {
@@ -68,6 +71,7 @@ export class DogsController {
   }
 
   @Delete(':id')
+  @UseGuards(new AuthGuard([USER_ROLE.ADMIN]))
   @Header('Cache-Control', 'none')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseIntPipe) id: number): void {
