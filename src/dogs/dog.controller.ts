@@ -14,6 +14,7 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
   UsePipes,
 
   /*  Query,
@@ -25,8 +26,10 @@ import { Dog } from './interface/dog.interface';
 import { UpdateDogDto } from './dto/update-dog.dto';
 import { ParseDatePipe } from 'src/pipes/parse-date.pipe';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { USER_ROLE } from 'src/contants/UserRoles.enum';
+import { USER_ROLE } from 'src/constants/UserRoles.enum';
+import { ReqDurationInterceptor } from 'src/interceptors/req-duration.interceptor';
 
+@UseInterceptors(ReqDurationInterceptor)
 @Controller('dogs')
 export class DogsController {
   constructor(private dogsService: DogsService) {}
@@ -41,7 +44,8 @@ export class DogsController {
 
   @UsePipes(new DefaultValuePipe(5))
   @Get()
-  findAll(@Query('limit') limit: number): Dog[] {
+  async findAll(@Query('limit') limit: number): Promise<Dog[]> {
+    await new Promise((resolve) => setTimeout(resolve, 6000));
     return this.dogsService.findAll(limit);
   }
 

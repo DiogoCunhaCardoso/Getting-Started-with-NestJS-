@@ -43,6 +43,9 @@ export class CustomFilter implements ExceptionFilter {
       case HttpStatus.NOT_ACCEPTABLE:
         return 'WRONG_FORMAT';
         break;
+      case HttpStatus.REQUEST_TIMEOUT:
+        return 'REQUEST_TIMEOUT';
+        break;
 
       default:
         return 'GENERAL_ERROR';
