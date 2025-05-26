@@ -1,22 +1,33 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Request } from 'express';
-import { Observable } from 'rxjs';
-import { USER_ROLE } from 'src/constants/UserRoles.enum';
+import { Reflector } from '@nestjs/core';
+/* import { Request } from 'express';
+ */ import { Observable } from 'rxjs';
+import { Roles /* USER_ROLE */ } from 'src/constants/UserRoles.enum';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly allowedRoles: USER_ROLE[]) {}
+  constructor(private readonly reflector: Reflector) {}
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    const roles = this.reflector.get(Roles, context.getHandler());
+
+    if (!roles) return false;
+
     const ctx = context.switchToHttp();
 
-    const request = ctx.getRequest<Request>();
+    const request = ctx.getRequest();
 
-    const authHeader = request.headers['authorization'];
+    const token = {
+      userId: 1,
+      username: 'diogo',
+      role: 'ADMIN',
+    };
 
-    if (!this.allowedRoles.includes(authHeader as USER_ROLE)) return false;
+    request.user = token;
 
-    return true;
+    /*     const authHeader = request.headers['authorization']; */
+
+    return roles.includes(request.user.role);
   }
 }

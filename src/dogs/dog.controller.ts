@@ -26,8 +26,9 @@ import { Dog } from './interface/dog.interface';
 import { UpdateDogDto } from './dto/update-dog.dto';
 import { ParseDatePipe } from 'src/pipes/parse-date.pipe';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { USER_ROLE } from 'src/constants/UserRoles.enum';
+import { Roles, USER_ROLE } from 'src/constants/UserRoles.enum';
 import { ReqDurationInterceptor } from 'src/interceptors/req-duration.interceptor';
+import { User } from 'src/decorators/user.decorator';
 
 @UseInterceptors(ReqDurationInterceptor)
 @Controller('dogs')
@@ -44,8 +45,14 @@ export class DogsController {
 
   @UsePipes(new DefaultValuePipe(5))
   @Get()
-  async findAll(@Query('limit') limit: number): Promise<Dog[]> {
-    await new Promise((resolve) => setTimeout(resolve, 6000));
+  /* async */
+  findAll(
+    @Query('limit') limit: number,
+    @User() user: any,
+  ): /* Promise< */ Dog[] /* > */ {
+    /* await new Promise((resolve) => setTimeout(resolve, 6000)); */
+    console.log('user' + user);
+
     return this.dogsService.findAll(limit);
   }
 
@@ -75,7 +82,8 @@ export class DogsController {
   }
 
   @Delete(':id')
-  @UseGuards(new AuthGuard([USER_ROLE.ADMIN]))
+  @Roles([USER_ROLE.ADMIN])
+  @UseGuards(AuthGuard)
   @Header('Cache-Control', 'none')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseIntPipe) id: number): void {

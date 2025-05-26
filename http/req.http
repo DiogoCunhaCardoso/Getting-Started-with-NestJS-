@@ -2,6 +2,10 @@
 
 ###
 
+GET http://localhost:3000/profile
+
+###
+
 GET http://localhost:3000/dogs
 
 ###
@@ -34,7 +38,6 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:3000/dogs/2
-Authorization: user
 
 ###
 
